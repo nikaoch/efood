@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { cores } from "../../styles.ts";
 
-export const Form = styled.div`
+export const FormDiv = styled.div`
     position: fixed;
     top: 0;
     left: 0;
@@ -31,10 +31,14 @@ export const FormContent = styled.div`
 
     input {
         width: 344px;
-        margin: 8px 0;
+        margin-top: 8px;
         background-color: ${cores.beje};
         border: none;
         height: 32px;
+    }
+
+    small {
+        color: ${cores.preto};
     }
 
     .small {

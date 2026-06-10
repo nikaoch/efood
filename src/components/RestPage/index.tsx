@@ -101,7 +101,7 @@ const RestPage = () => {
         <Container>
             <FoodList>
                 {restaurant?.cardapio.map((food) => (
-                    <Food>
+                    <Food key={food.id}>
                         <img src={food.foto} alt={food.nome} />
                         <h4>{food.nome}</h4>
                         <p className="description">{food.descricao}</p>

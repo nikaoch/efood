@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { cores } from "../../styles.ts";
 
-export const PayForm = styled.div`
+export const PayFormDiv = styled.div`
     position: fixed;
     top: 0;
     left: 0;
@@ -31,10 +31,13 @@ export const PayFormContent = styled.div`
 
     input {
         width: 344px;
-        margin: 8px 0;
         background-color: ${cores.beje};
         border: none;
         height: 32px;
+    }
+
+    small {
+        color: ${cores.preto};
     }
 
     .small {
