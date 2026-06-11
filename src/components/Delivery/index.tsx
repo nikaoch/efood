@@ -32,24 +32,24 @@ const Delivery = ({onClose}: Props) => {
             number: Yup.string()
             .required('O campo é obrigatório!')
         }),
-        onSubmit: (values) => {
-            console.log(values)
-        }
+        onSubmit: () => {}
 })
-
-    const goPay = () => {
-        setGoPayment(true)
-    }
-
-    const closePay = () => {
-        setGoPayment(false)
-    }
 
     const getErrorMessage = (fieldName: string, message?: string) => {
         const isTouched = fieldName in form.touched
         const isInvalid = fieldName in form.errors
 
         if (isTouched && isInvalid) return message
+    }
+
+    const goPay = () => {
+        const hasErrors = Object.keys(form.errors).length > 0
+        if (hasErrors) return ''
+        setGoPayment(true)
+    }
+
+    const closePay = () => {
+        setGoPayment(false)
     }
 
     return (
@@ -74,8 +74,8 @@ const Delivery = ({onClose}: Props) => {
                         <small>{getErrorMessage('number', form.errors.number)}</small> <br />
                         <label htmlFor="complement">Complemento (opcional)</label> <br />
                         <input id="complement" type="text" name="complement" value={form.values.complement} onChange={form.handleChange} onBlur={form.handleBlur}/> <br />
-                        <button type="submit" onClick={goPay} >Continuar com o pagamento</button> <br />
-                        {goPayment &&<Payment onBackDelivery={closePay} onFinish={() => {closePay(); onClose()}}/>}
+                        <button type="submit" onClick={goPay}>Continuar com o pagamento</button> <br />
+                        {goPayment &&<Payment deliveryData={form.values} onBackDelivery={closePay} onFinish={() => {closePay(); onClose()}}/>}
                         <button type="button" onClick={onClose}>Voltar para o carrinho</button>
                     </form>
                 </FormContent>

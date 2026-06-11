@@ -1,10 +1,10 @@
 import { MessageDiv, MessageContent } from "./styles.ts";
 import { Props } from "../FoodCard/index.tsx";
 
-const Message = ({onClose}: Props) => (
+const Message = ({onClose, orderId}: Props) => (
     <MessageDiv>
         <MessageContent>
-            <h4>Pedido realizado</h4>
+            <h4>Pedido realizado: {orderId}</h4>
             <p>
                 Estamos felizes em informar que seu pedido já está em processo de preparação e, em breve, será entregue no endereço fornecido.
             </p>

@@ -17,6 +17,7 @@ export type FoodItem = {
 export type Props = {
     food: FoodItem
     onClose: () => void
+    orderId: string
 }
 
 const FoodCard = ({food, onClose}: Props) => {

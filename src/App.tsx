@@ -6,7 +6,7 @@ import RestPage from "./components/RestPage/index.tsx";
 export type Food = {
   id: number;
   title: string;
-  preco: number;
+  price: number;
   quantidade: number;
   image: string;
 }

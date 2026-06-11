@@ -1,19 +1,35 @@
-import { useState } from "react";
 import { PayFormContent, PayFormDiv } from "./styles.ts";
 import Message from "../Message/index.tsx";
 import { useFormik } from "formik";
 import * as Yup from 'yup'
+import { usePurchaseMutation } from "../../services/api.ts";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/index.ts";
+
+type DeliveryData = {
+    name: string
+    address: string
+    city: string
+    cep: string
+    number: string
+    complement: string
+}
 
 type Props = {
     onBackDelivery: () => void
     onFinish: () => void
+    deliveryData: DeliveryData
 }
 
-const Payment = ({onFinish, onBackDelivery}: Props) => {
-    const [endPay, setEndPay] = useState(false)
-    const goEndPayment = () => {
-        setEndPay(true)
-    }
+const Payment = ({onFinish, onBackDelivery, deliveryData}: Props) => {
+    const cart = useSelector((state: RootState) => state.cart.items)
+    const [purchase, { data, isSuccess }] = usePurchaseMutation()
+
+    const products = cart.map(item => ({
+        id: item.id,
+        price: item.price
+    }))
+
     const form = useFormik({
         initialValues: {
             cardName: '',
@@ -42,7 +58,30 @@ const Payment = ({onFinish, onBackDelivery}: Props) => {
             .required('O campo é obrigatório!'),
         }),
         onSubmit: (values) => {
-            console.log(values)
+            purchase ({
+                payment: {
+                    card: {
+                        name: values.cardName,
+                        number: Number(values.cardNumber),
+                        code: Number(values.cvv),
+                        expires: {
+                            month: Number(values.month),
+                            year: Number(values.year)
+                        }
+                    }
+                },
+                products,
+                delivery: {
+                    receiver: deliveryData.name,
+                    address: {
+                        description: deliveryData.address,
+                        city: deliveryData.city,
+                        zipCode: deliveryData.cep,
+                        number: Number(deliveryData.number),
+                        complement: deliveryData.complement
+                    }
+                }
+            })
         }
     })
 
@@ -72,15 +111,15 @@ const Payment = ({onFinish, onBackDelivery}: Props) => {
                     <label htmlFor="year">Ano de vencimento</label> <br />
                     <input className="small" id="year" type="text" name="year" value={form.values.year} onChange={form.handleChange} onBlur={form.handleBlur}/> <br />
                     <small>{getErrorMessage('year', form.errors.year)}</small> <br />
-                    <button type="button" onClick={() => {form.submitForm(); goEndPayment()}}>Finalizar pagamento</button> <br />
-                    {endPay &&<Message onClose={onFinish} food={{
-                        id: 0,
-                        nome: "",
-                        descricao: "",
-                        preco: 0,
-                        porcao: "",
-                        foto: ""
-                    }}/>}
+                    <button type="button" onClick={form.submitForm}>Finalizar pagamento</button> <br />
+                    {isSuccess &&<Message orderId={data.orderId} onClose={onFinish} food={{
+                    id: 0,
+                    nome: "",
+                    descricao: "",
+                    preco: 0,
+                    porcao: "",
+                    foto: ""
+                }} />}
                     <button type="button" onClick={onBackDelivery}>Voltar para edição o endereço</button>
                 </PayFormContent>
             </PayFormDiv>
